@@ -11,9 +11,9 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import MyListPage from './pages/MyListPage';
+import InspireMePage from './pages/InspireMePage';
+import ExplorePage from './pages/ExplorePage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -52,31 +52,32 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
+          <Route exact path="/my-list">
+            <MyListPage />
           </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
+          <Route exact path="/inspire-me">
+            <InspireMePage />
           </Route>
-          <Route path="/tab3">
-            <Tab3 />
+          <Route path="/explore">
+            <ExplorePage />
           </Route>
           <Route exact path="/">
-            <Redirect to="/tab1" />
+            <Redirect to="/my-list" />
           </Route>
         </IonRouterOutlet>
+
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
+          <IonTabButton tab="my-list" href="/my-list">
             <IonIcon aria-hidden="true" icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
+            <IonLabel>My List</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
+          <IonTabButton tab="inspire-me" href="/inspire-me">
             <IonIcon aria-hidden="true" icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
+            <IonLabel>Inspire Me</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
+          <IonTabButton tab="explore" href="/explore">
             <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
+            <IonLabel>Explore</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
