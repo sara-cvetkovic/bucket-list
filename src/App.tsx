@@ -7,7 +7,16 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
+  IonMenu,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonMenuButton,
+  IonList,
+  IonItem,
+  IonMenuToggle,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
@@ -50,8 +59,40 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
+        <IonMenu contentId="main-content">
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>BucketList</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+
+          <IonContent>
+            <IonList>
+
+              <IonMenuToggle>
+                <IonItem routerLink="/my-list">
+                  My Bucket List
+                </IonItem>
+              </IonMenuToggle>
+
+              <IonMenuToggle>
+                <IonItem routerLink="/inspire-me">
+                  Inspire Me
+                </IonItem>
+              </IonMenuToggle>
+
+              <IonMenuToggle>
+                <IonItem routerLink="/explore">
+                  Explore
+                </IonItem>
+              </IonMenuToggle>
+
+            </IonList>
+          </IonContent>
+        </IonMenu>
+
       <IonTabs>
-        <IonRouterOutlet>
+        <IonRouterOutlet id="main-content">
           <Route exact path="/my-list">
             <MyListPage />
           </Route>

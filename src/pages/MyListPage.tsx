@@ -1,10 +1,16 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewWillEnter} from '@ionic/react';
 
 const MyListPage: React.FC = () => {
+
+    useIonViewWillEnter(() => {
+        console.log('My List - will enter');
+    });
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
+            <IonMenuButton slot="start" />
           <IonTitle>My Bucket List</IonTitle>
         </IonToolbar>
       </IonHeader>
