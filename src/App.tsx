@@ -23,6 +23,8 @@ import { ellipse, square, triangle } from 'ionicons/icons';
 import MyListPage from './pages/MyListPage';
 import InspireMePage from './pages/InspireMePage';
 import ExplorePage from './pages/ExplorePage';
+import BucketItemDetailsPage from './pages/BucketItemDetailsPage';
+import AddItemPage from './pages/AddItemPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -93,6 +95,12 @@ const App: React.FC = () => (
 
       <IonTabs>
         <IonRouterOutlet id="main-content">
+          <Route exact path="/my-list/item/:id">
+            <BucketItemDetailsPage />
+          </Route>
+          <Route exact path="/my-list/add">
+            <AddItemPage />
+          </Route>
           <Route exact path="/my-list">
             <MyListPage />
           </Route>
