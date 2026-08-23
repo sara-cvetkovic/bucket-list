@@ -1,0 +1,12 @@
+.bucket-card {
+    margin: 16px 0;
+    border-radius: var(--bucket-radius);
+}
+
+.bucket-card ion-card-title {
+    color: var(--bucket-text);
+}
+
+.bucket-card ion-card-content {
+    color: var(--bucket-muted);
+}

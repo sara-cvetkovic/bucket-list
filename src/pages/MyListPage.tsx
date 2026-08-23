@@ -51,9 +51,10 @@ const MyListPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-        <IonContent className="ion-padding">
+        <IonContent className="my-list-content ion-padding">
             <h1>My Bucket List</h1>
             <IonButton
+                className="add-button"
                 expand="block"
                 routerLink="/my-list/add"
             >

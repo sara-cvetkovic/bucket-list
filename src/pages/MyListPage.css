@@ -1,8 +1,19 @@
+.my-list-content {
+    --background: var(--bucket-background);
+}
+
 .my-list {
     max-width: 700px;
     margin: 0 auto;
+    padding-bottom: 30px;
 }
 
 .bucket-card {
     margin-bottom: 16px;
+    border-radius: var(--bucket-radius);
+}
+
+.add-button {
+    --background: var(--bucket-primary);
+    --border-radius: var(--bucket-radius);
 }

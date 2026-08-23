@@ -1,6 +1,7 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { BucketItem as BucketItemModel } from '../models/BucketItem';
+import './BucketItem.css';
 
 interface BucketItemProps {
     item: BucketItemModel;

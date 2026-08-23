@@ -1,2 +1,13 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+
+:root {
+    --bucket-primary: #6C63FF;
+    --bucket-secondary: #FF6584;
+    --bucket-background: #F7F7FB;
+    --bucket-card-background: #FFFFFF;
+    --bucket-text: #222222;
+    --bucket-muted: #777777;
+
+    --bucket-radius: 16px;
+}
