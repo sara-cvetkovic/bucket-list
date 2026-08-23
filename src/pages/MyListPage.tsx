@@ -2,8 +2,12 @@ import {IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, Ion
 import BucketItem from '../components/BucketItem';
 import { BucketItem as BucketItemModel } from '../models/BucketItem';
 import './MyListPage.css';
+import { useState } from 'react';
+import BucketItemModal from '../components/BucketItemModal';
 
 const MyListPage: React.FC = () => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const testItems: BucketItemModel[] = [
         {
@@ -56,7 +60,7 @@ const MyListPage: React.FC = () => {
             <IonButton
                 className="add-button"
                 expand="block"
-                routerLink="/my-list/add"
+                onClick={() => setIsModalOpen(true)}
             >
                 + Add Item
             </IonButton>
@@ -69,6 +73,10 @@ const MyListPage: React.FC = () => {
                 ))}
             </div>
         </IonContent>
+        <BucketItemModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+        />
     </IonPage>
   );
 };

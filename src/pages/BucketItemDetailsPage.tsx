@@ -6,12 +6,17 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
+    IonAlert,
+    IonButton,
 } from '@ionic/react';
 //import { useParams } from 'react-router-dom';
 import { BucketItem as BucketItemModel } from '../models/BucketItem';
+import { useState } from 'react';
 
 const BucketItemDetailsPage: React.FC = () => {
     //const { id } = useParams<{ id: string }>();
+
+    const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
     const testItem: BucketItemModel = {
         id: '1',
@@ -56,7 +61,34 @@ const BucketItemDetailsPage: React.FC = () => {
                 <p>
                     Public: {testItem.isPublic ? 'Yes' : 'No'}
                 </p>
+                <IonButton
+                    expand="block"
+                    color="danger"
+                    onClick={() => setShowDeleteAlert(true)}
+                >
+                    Delete Item
+                </IonButton>
             </IonContent>
+
+            <IonAlert
+                isOpen={showDeleteAlert}
+                header="Delete item?"
+                message="Are you sure you want to delete this bucket list item?"
+                buttons={[
+                    {
+                        text: 'Cancel',
+                        role: 'cancel',
+                    },
+                    {
+                        text: 'Delete',
+                        role: 'destructive',
+                        handler: () => {
+                            console.log('Delete item:', testItem.id);
+                        },
+                    },
+                ]}
+                onDidDismiss={() => setShowDeleteAlert(false)}
+            />
         </IonPage>
     );
 };
