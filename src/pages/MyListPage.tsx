@@ -2,45 +2,66 @@ import {IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, Ion
 import BucketItem from '../components/BucketItem';
 import { BucketItem as BucketItemModel } from '../models/BucketItem';
 import './MyListPage.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BucketItemModal from '../components/BucketItemModal';
+import BucketListService from '../services/BucketListService';
 
 const MyListPage: React.FC = () => {
 
+    const [items, setItems] = useState<BucketItemModel[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const testItems: BucketItemModel[] = [
-        {
-            id: '1',
-            title: 'Visit Japan',
-            description: 'Visit Tokyo and Kyoto',
-            category: 'Travel',
-            completed: false,
-            isPublic: true,
-            ownerId: 'test-user',
-            createdBy: 'test-user',
-        },
-        {
-            id: '2',
-            title: 'Learn Italian',
-            description: 'Reach conversational level in Italian',
-            category: 'Skills',
-            completed: false,
-            isPublic: false,
-            ownerId: 'test-user',
-            createdBy: 'test-user',
-        },
-        {
-            id: '3',
-            title: 'Go Skydiving',
-            description: 'Try skydiving at least once',
-            category: 'Adventure',
-            completed: true,
-            isPublic: true,
-            ownerId: 'test-user',
-            createdBy: 'test-user',
-        },
-    ];
+    // const testItems: BucketItemModel[] = [
+    //     {
+    //         id: '1',
+    //         title: 'Visit Japan',
+    //         description: 'Visit Tokyo and Kyoto',
+    //         category: 'Travel',
+    //         completed: false,
+    //         isPublic: true,
+    //         ownerId: 'test-user',
+    //         createdBy: 'test-user',
+    //     },
+    //     {
+    //         id: '2',
+    //         title: 'Learn Italian',
+    //         description: 'Reach conversational level in Italian',
+    //         category: 'Skills',
+    //         completed: false,
+    //         isPublic: false,
+    //         ownerId: 'test-user',
+    //         createdBy: 'test-user',
+    //     },
+    //     {
+    //         id: '3',
+    //         title: 'Go Skydiving',
+    //         description: 'Try skydiving at least once',
+    //         category: 'Adventure',
+    //         completed: true,
+    //         isPublic: true,
+    //         ownerId: 'test-user',
+    //         createdBy: 'test-user',
+    //     },
+    // ];
+
+    useEffect(() => {
+        const loadItems = async () => {
+            try {
+                const data = await BucketListService.getItems();
+                console.log('Firebase items:', data);
+                setItems(data);
+
+            } catch (error) {
+                console.error('Error loading items:', error);
+                console.error('Full error:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadItems();
+    }, []);
 
     useIonViewWillEnter(() => {
         console.log('My List - will enter');
@@ -64,14 +85,18 @@ const MyListPage: React.FC = () => {
             >
                 + Add Item
             </IonButton>
+            {isLoading ? (
+                <p>Loading...</p>
+            ) : (
             <div className="my-list">
-                {testItems.map((item) => (
+                {items.map((item) => (
                     <BucketItem
                         key={item.id}
                         item={item}
                     />
                 ))}
             </div>
+            )}
         </IonContent>
         <BucketItemModal
             isOpen={isModalOpen}
