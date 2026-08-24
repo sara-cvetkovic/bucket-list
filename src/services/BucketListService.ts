@@ -1,10 +1,12 @@
 import { BucketItem } from '../models/BucketItem';
 import DATABASE_URL from '../config/firebase';
+import AuthService from './AuthService';
 
 class BucketListService {
 
     async getItems(): Promise<BucketItem[]> {
-        const url = `${DATABASE_URL}/bucketItems.json`;
+        const token = AuthService.getToken();
+        const url = `${DATABASE_URL}/bucketItems.json?auth=${token}`;
 
         console.log('Fetching URL:', url);
 
@@ -31,7 +33,9 @@ class BucketListService {
     }
 
     async getItem(id: string): Promise<BucketItem | null> {
-        const url = `${DATABASE_URL}/bucketItems/${id}.json`;
+        const token = AuthService.getToken();
+
+        const url = `${DATABASE_URL}/bucketItems/${id}.json?auth=${token}`;
 
         const response = await fetch(url);
 
@@ -52,7 +56,9 @@ class BucketListService {
     }
 
     async addItem(item: Omit<BucketItem, 'id'>): Promise<BucketItem> {
-        const url = `${DATABASE_URL}/bucketItems.json`;
+        const token = AuthService.getToken();
+
+        const url = `${DATABASE_URL}/bucketItems.json?auth=${token}`;
 
         const response = await fetch(url, {
             method: 'POST',
@@ -73,7 +79,9 @@ class BucketListService {
     }
 
     async updateItem(item: BucketItem): Promise<BucketItem> {
-        const url = `${DATABASE_URL}/bucketItems/${item.id}.json`;
+        const token = AuthService.getToken();
+
+        const url = `${DATABASE_URL}/bucketItems/${item.id}.json?auth=${token}`;
 
         const response = await fetch(url, {
             method: 'PATCH',
@@ -99,7 +107,9 @@ class BucketListService {
     }
 
     async deleteItem(id: string): Promise<void> {
-        const url = `${DATABASE_URL}/bucketItems/${id}.json`;
+        const token = AuthService.getToken();
+
+        const url = `${DATABASE_URL}/bucketItems/${id}.json?auth=${token}`;
 
         const response = await fetch(url, {
             method: 'DELETE',

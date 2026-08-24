@@ -25,6 +25,9 @@ import InspireMePage from './pages/InspireMePage';
 import ExplorePage from './pages/ExplorePage';
 import BucketItemDetailsPage from './pages/BucketItemDetailsPage';
 import AddItemPage from './pages/AddItemPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import AuthService from './services/AuthService';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -89,12 +92,31 @@ const App: React.FC = () => (
                 </IonItem>
               </IonMenuToggle>
 
+              <IonMenuToggle>
+                <IonItem
+                    button
+                    onClick={() => {
+                      AuthService.logout();
+                      window.location.href = '/login';
+                    }}
+                >
+                  Logout
+                </IonItem>
+              </IonMenuToggle>
+
             </IonList>
           </IonContent>
         </IonMenu>
 
       <IonTabs>
         <IonRouterOutlet id="main-content">
+          <Route exact path="/login">
+            <LoginPage />
+          </Route>
+
+          <Route exact path="/register">
+            <RegisterPage />
+          </Route>
           <Route exact path="/my-list/item/:id">
             <BucketItemDetailsPage />
           </Route>
@@ -111,7 +133,7 @@ const App: React.FC = () => (
             <ExplorePage />
           </Route>
           <Route exact path="/">
-            <Redirect to="/my-list" />
+            <Redirect to="/login" />
           </Route>
         </IonRouterOutlet>
 

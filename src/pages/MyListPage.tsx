@@ -5,6 +5,7 @@ import './MyListPage.css';
 import { useEffect, useState } from 'react';
 import BucketItemModal from '../components/BucketItemModal';
 import BucketListService from '../services/BucketListService';
+import AuthService from '../services/AuthService';
 
 const MyListPage: React.FC = () => {
 
@@ -69,6 +70,12 @@ const MyListPage: React.FC = () => {
         category: string;
     }) => {
         try {
+            const currentUser = AuthService.getCurrentUser();
+
+            if (!currentUser) {
+                return;
+            }
+
             const newItem = await BucketListService.addItem({
                 title: formData.title,
                 description: formData.description,
