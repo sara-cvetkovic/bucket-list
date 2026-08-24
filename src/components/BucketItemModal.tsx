@@ -18,11 +18,17 @@ import { useState } from 'react';
 interface BucketItemModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onAdd: (item: {
+        title: string;
+        description: string;
+        category: string;
+    }) => void;
 }
 
 const BucketItemModal: React.FC<BucketItemModalProps> = ({
                                                              isOpen,
                                                              onClose,
+                                                             onAdd,
                                                          }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -37,11 +43,16 @@ const BucketItemModal: React.FC<BucketItemModalProps> = ({
             return;
         }
 
-        console.log('Form submitted:', {
-            title,
-            description,
+        onAdd({
+            title: title.trim(),
+            description: description.trim(),
             category,
         });
+
+        setTitle('');
+        setDescription('');
+        setCategory('');
+        setSubmitted(false);
 
         onClose();
     };

@@ -1,6 +1,4 @@
 import {
-    IonBackButton,
-    IonButtons,
     IonContent,
     IonHeader,
     IonPage,
@@ -8,68 +6,143 @@ import {
     IonToolbar,
     IonAlert,
     IonButton,
+    IonMenuButton,
+    IonSpinner,
 } from '@ionic/react';
-//import { useParams } from 'react-router-dom';
-import { BucketItem as BucketItemModel } from '../models/BucketItem';
-import { useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { BucketItem } from '../models/BucketItem';
+import BucketListService from '../services/BucketListService';
+import { useEffect, useState } from 'react';
+import EditBucketItemModal from '../components/EditBucketitemModal';
+
+
+interface RouteParams {
+    id: string;
+}
 
 const BucketItemDetailsPage: React.FC = () => {
-    //const { id } = useParams<{ id: string }>();
+    const { id } = useParams<RouteParams>();
+    const history = useHistory();
 
+    const [item, setItem] = useState<BucketItem | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    const testItem: BucketItemModel = {
-        id: '1',
-        title: 'Visit Japan',
-        description: 'Visit Tokyo and Kyoto',
-        category: 'Travel',
-        completed: false,
-        isPublic: true,
-        ownerId: 'test-user',
-        createdBy: 'test-user',
+    useEffect(() => {
+        const loadItem = async () => {
+            try {
+                const data = await BucketListService.getItem(id);
+                setItem(data);
+            } catch (error) {
+                console.error('Error loading item:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadItem();
+    }, [id]);
+
+    const handleDelete = async () => {
+        if (!item) {
+            return;
+        }
+
+        try {
+            await BucketListService.deleteItem(item.id);
+            history.push('/my-list');
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
     };
+
+    const handleUpdate = async (updatedItem: BucketItem) => {
+        try {
+            const updated = await BucketListService.updateItem(updatedItem);
+            setItem(updated);
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <IonPage>
+                <IonContent className="ion-padding">
+                    <IonSpinner />
+                </IonContent>
+            </IonPage>
+        );
+    }
+
+    // const testItem: BucketItemModel = {
+    //     id: '1',
+    //     title: 'Visit Japan',
+    //     description: 'Visit Tokyo and Kyoto',
+    //     category: 'Travel',
+    //     completed: false,
+    //     isPublic: true,
+    //     ownerId: 'test-user',
+    //     createdBy: 'test-user',
+    // };
+
+    if (!item) {
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonMenuButton slot="start" />
+                        <IonTitle>Bucket Item</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+
+            <IonContent className="ion-padding">
+                <h2>Item not found</h2>
+                <IonButton onClick={() => history.push('/my-list')}>
+                    Back to My List
+                </IonButton>
+            </IonContent>
+        </IonPage>
+    );
+    }
 
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonBackButton defaultHref="/my-list" />
-                    </IonButtons>
-
-                    <IonTitle>Bucket Item</IonTitle>
+                    <IonMenuButton slot="start" />
+                    <IonTitle>{item.title}</IonTitle>
                 </IonToolbar>
             </IonHeader>
 
             <IonContent className="ion-padding">
-                <h1>{testItem.title}</h1>
+                <h1>{item.title}</h1>
 
-                <p>Item ID: {testItem.id}</p>
+                <p>{item.description}</p>
 
                 <p>
-                    {testItem.description}
+                    <strong>Category:</strong> {item.category}
                 </p>
 
                 <p>
-                    Category: {testItem.category}
+                    <strong>Status:</strong>{' '}
+                    {item.completed ? 'Completed' : 'Not completed'}
                 </p>
 
-                <p>
-                    Status: {testItem.completed ? 'Completed' : 'Not completed'}
-                </p>
-
-                <p>
-                    Public: {testItem.isPublic ? 'Yes' : 'No'}
-                </p>
                 <IonButton
                     expand="block"
-                    color="danger"
+                    onClick={() => setIsEditModalOpen(true)}
+                >
+                    Edit
+                </IonButton>
+
+                <IonButton
+                    expand="block"
                     onClick={() => setShowDeleteAlert(true)}
                 >
-                    Delete Item
+                    Delete
                 </IonButton>
-            </IonContent>
-
             <IonAlert
                 isOpen={showDeleteAlert}
                 header="Delete item?"
@@ -82,13 +155,18 @@ const BucketItemDetailsPage: React.FC = () => {
                     {
                         text: 'Delete',
                         role: 'destructive',
-                        handler: () => {
-                            console.log('Delete item:', testItem.id);
-                        },
+                        handler: handleDelete,
                     },
                 ]}
                 onDidDismiss={() => setShowDeleteAlert(false)}
             />
+                <EditBucketItemModal
+                    isOpen={isEditModalOpen}
+                    item={item}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSave={handleUpdate}
+                />
+            </IonContent>
         </IonPage>
     );
 };

@@ -63,6 +63,29 @@ const MyListPage: React.FC = () => {
         loadItems();
     }, []);
 
+    const handleAddItem = async (formData: {
+        title: string;
+        description: string;
+        category: string;
+    }) => {
+        try {
+            const newItem = await BucketListService.addItem({
+                title: formData.title,
+                description: formData.description,
+                category: formData.category,
+                completed: false,
+                isPublic: false,
+                ownerId: 'temp-user',
+                createdBy: 'temp-user',
+            });
+
+            setItems((prevItems) => [...prevItems, newItem]);
+
+        } catch (error) {
+            console.error('Error adding item:', error);
+        }
+    };
+
     useIonViewWillEnter(() => {
         console.log('My List - will enter');
     });
@@ -85,6 +108,7 @@ const MyListPage: React.FC = () => {
             >
                 + Add Item
             </IonButton>
+
             {isLoading ? (
                 <p>Loading...</p>
             ) : (
@@ -101,6 +125,7 @@ const MyListPage: React.FC = () => {
         <BucketItemModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
+            onAdd={handleAddItem}
         />
     </IonPage>
   );

@@ -31,16 +31,83 @@ class BucketListService {
     }
 
     async getItem(id: string): Promise<BucketItem | null> {
-        return null;
+        const url = `${DATABASE_URL}/bucketItems/${id}.json`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch bucket item: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data) {
+            return null;
+        }
+
+        return {
+            id,
+            ...data,
+        };
     }
 
-    async addItem(item: BucketItem): Promise<void> {
+    async addItem(item: Omit<BucketItem, 'id'>): Promise<BucketItem> {
+        const url = `${DATABASE_URL}/bucketItems.json`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to add bucket item: ${response.status}`);
+        }
+
+        const data = await response.json(); // Firebase vraća { name: "-Nxyz123..." }
+
+        return {
+            id: data.name,
+            ...item,
+        };
     }
 
-    async updateItem(item: BucketItem): Promise<void> {
+    async updateItem(item: BucketItem): Promise<BucketItem> {
+        const url = `${DATABASE_URL}/bucketItems/${item.id}.json`;
+
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: item.title,
+                description: item.description,
+                category: item.category,
+                completed: item.completed,
+                isPublic: item.isPublic,
+                ownerId: item.ownerId,
+                createdBy: item.createdBy,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update bucket item: ${response.status}`);
+        }
+
+        return item;
     }
 
     async deleteItem(id: string): Promise<void> {
+        const url = `${DATABASE_URL}/bucketItems/${id}.json`;
+
+        const response = await fetch(url, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to delete bucket item: ${response.status}`);
+        }
     }
 }
 
