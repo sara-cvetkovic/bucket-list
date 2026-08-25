@@ -52,7 +52,7 @@ const InspirePage: React.FC = () => {
         }
 
         const itemsToAdd = ideas
-            .filter((item) => selectedIdeas.includes(item.id))
+            .filter((item) => selectedIdeas.some((selected) => selected.id === item.id))
             .map((item) => ({
                 title: item.title,
                 description: item.description,
@@ -97,8 +97,9 @@ const InspirePage: React.FC = () => {
                 <IonButton
                     expand="block"
                     onClick={getRandomIdeas}
+                    disabled={isLoading}
                 >
-                    Inspire Me
+                    {isLoading ? 'Loading...' : 'Inspire Me'}
                 </IonButton>
 
                 {ideas.map((idea) => (

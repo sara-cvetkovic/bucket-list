@@ -153,6 +153,8 @@ const BucketItemDetailsPage: React.FC = () => {
                 </p>
 
                 {!isExplore && (
+                    <IonItem>
+                    <IonLabel>Completed</IonLabel>
                 <IonToggle
                     checked={item.completed}
                     onIonChange={(e) => {
@@ -162,6 +164,7 @@ const BucketItemDetailsPage: React.FC = () => {
                         });
                     }}
                 />
+                    </IonItem>
                 )}
                 {!isExplore && (
                 <IonItem>

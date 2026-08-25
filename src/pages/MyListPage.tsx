@@ -118,6 +118,8 @@ const MyListPage: React.FC = () => {
 
             {isLoading ? (
                 <p>Loading...</p>
+            ) : items.length === 0 ? (
+                <p>You don't have any bucket list items yet. Tap "+ Add Item" to create one.</p>
             ) : (
             <div className="my-list">
                 {items.map((item) => (

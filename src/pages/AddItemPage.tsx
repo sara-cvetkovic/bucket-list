@@ -4,7 +4,6 @@ import {
     IonHeader,
     IonInput,
     IonItem,
-    IonLabel,
     IonPage,
     IonSelect,
     IonSelectOption,
