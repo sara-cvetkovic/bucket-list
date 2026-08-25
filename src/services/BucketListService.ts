@@ -169,6 +169,8 @@ class BucketListService {
         if (!response.ok) {
             throw new Error(`Failed to delete bucket item: ${response.status}`);
         }
+
+        await this.removePublicItem(id);
     }
 
     async getPublicItems(): Promise<BucketItem[]> {
@@ -271,6 +273,52 @@ class BucketListService {
             id,
             ...data,
         };
+    }
+
+    async addMultipleItems(items: Omit<BucketItem, 'id'>[]): Promise<BucketItem[]> {
+        const user = AuthService.getCurrentUser();
+
+        if (!user) {
+            throw new Error('User is not logged in.');
+        }
+
+        const token = AuthService.getToken();
+
+        const updates: Record<string, Omit<BucketItem, 'id'>> = {};
+
+        items.forEach((item) => {
+            const id = crypto.randomUUID();
+
+            updates[id] = {
+                ...item,
+                ownerId: user.userId,
+                createdBy: user.userId,
+            };
+        });
+
+        const url =
+            `${DATABASE_URL}/bucketItems/${user.userId}.json?auth=${token}`;
+
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updates),
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to add multiple bucket items: ${response.status}`
+            );
+        }
+
+        return Object.entries(updates).map(
+            ([id, item]) => ({
+                id,
+                ...item,
+            })
+        );
     }
 }
 

@@ -152,11 +152,17 @@ const BucketItemDetailsPage: React.FC = () => {
                     <strong>Category:</strong> {item.category}
                 </p>
 
-                <p>
-                    <strong>Status:</strong>{' '}
-                    {item.completed ? 'Completed' : 'Not completed'}
-                </p>
-
+                {!isExplore && (
+                <IonToggle
+                    checked={item.completed}
+                    onIonChange={(e) => {
+                        setItem({
+                            ...item,
+                            completed: e.detail.checked
+                        });
+                    }}
+                />
+                )}
                 {!isExplore && (
                 <IonItem>
                     <IonLabel>Public item</IonLabel>

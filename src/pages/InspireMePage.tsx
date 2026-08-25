@@ -51,20 +51,21 @@ const InspirePage: React.FC = () => {
             return;
         }
 
+        const itemsToAdd = ideas
+            .filter((item) => selectedIdeas.includes(item.id))
+            .map((item) => ({
+                title: item.title,
+                description: item.description,
+                category: item.category,
+                completed: false,
+                isPublic: false,
+                ownerId: '',
+                createdBy: '',
+            }));
+
         try {
 
-            for (const idea of selectedIdeas) {
-
-                await BucketListService.addItem({
-                    title: idea.title,
-                    description: idea.description,
-                    category: idea.category,
-                    completed: false,
-                    isPublic: false,
-                    ownerId: '',
-                    createdBy: '',
-                });
-            }
+            await BucketListService.addMultipleItems(itemsToAdd);
 
             setSelectedIdeas([]);
 
