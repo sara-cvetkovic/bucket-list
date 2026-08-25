@@ -5,14 +5,17 @@ import AuthService from './AuthService';
 class BucketListService {
 
     async getItems(): Promise<BucketItem[]> {
-        const token = AuthService.getToken();
-        const url = `${DATABASE_URL}/bucketItems.json?auth=${token}`;
+        const user = AuthService.getCurrentUser();
 
-        console.log('Fetching URL:', url);
+        if (!user) {
+            throw new Error('User is not logged in.');
+        }
+
+        const token = AuthService.getToken();
+
+        const url = `${DATABASE_URL}/bucketItems/${user.userId}.json?auth=${token}`;
 
         const response = await fetch(url);
-
-        console.log('Response status:', response.status);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch bucket items: ${response.status}`);
@@ -33,9 +36,15 @@ class BucketListService {
     }
 
     async getItem(id: string): Promise<BucketItem | null> {
+        const user = AuthService.getCurrentUser();
+
+        if (!user) {
+            throw new Error('User is not logged in.');
+        }
+
         const token = AuthService.getToken();
 
-        const url = `${DATABASE_URL}/bucketItems/${id}.json?auth=${token}`;
+        const url = `${DATABASE_URL}/bucketItems/${user.userId}/${id}.json?auth=${token}`;
 
         const response = await fetch(url);
 
@@ -56,14 +65,30 @@ class BucketListService {
     }
 
     async addItem(item: Omit<BucketItem, 'id'>): Promise<BucketItem> {
-        const token = AuthService.getToken();
+        const user = AuthService.getCurrentUser();
 
-        const url = `${DATABASE_URL}/bucketItems.json?auth=${token}`;
+        if (!user) {
+            throw new Error('User is not logged in.');
+        }
+
+        const token = AuthService.getToken()
+
+        console.log('Current user:', user);
+        console.log('Token:', token);
+        console.log('Token exists:', !!token);
+
+        const url = `${DATABASE_URL}/bucketItems/${user.userId}.json?auth=${token}`;
+
+        const itemData = {
+            ...item,
+            ownerId: user.userId,
+            createdBy: user.userId,
+        };
 
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(item),
+            body: JSON.stringify(itemData),
         });
 
         if (!response.ok) {
@@ -74,42 +99,59 @@ class BucketListService {
 
         return {
             id: data.name,
-            ...item,
+            ...itemData,
         };
     }
 
     async updateItem(item: BucketItem): Promise<BucketItem> {
+        const user = AuthService.getCurrentUser();
+
+        if (!user) {
+            throw new Error('User is not logged in.');
+        }
+
         const token = AuthService.getToken();
 
-        const url = `${DATABASE_URL}/bucketItems/${item.id}.json?auth=${token}`;
+        const url = `${DATABASE_URL}/bucketItems/${user.userId}/${item.id}.json?auth=${token}`;
+
+        const itemData = {
+            title: item.title,
+            description: item.description,
+            category: item.category,
+            completed: item.completed,
+            isPublic: item.isPublic,
+            ownerId: user.userId,
+            createdBy: item.createdBy,
+        };
 
         const response = await fetch(url, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                title: item.title,
-                description: item.description,
-                category: item.category,
-                completed: item.completed,
-                isPublic: item.isPublic,
-                ownerId: item.ownerId,
-                createdBy: item.createdBy,
-            }),
+            body: JSON.stringify(itemData),
         });
 
         if (!response.ok) {
             throw new Error(`Failed to update bucket item: ${response.status}`);
         }
 
-        return item;
+        return {
+            ...item,
+            ...itemData,
+        };
     }
 
     async deleteItem(id: string): Promise<void> {
+        const user = AuthService.getCurrentUser();
+
+        if (!user) {
+            throw new Error('User is not logged in.');
+        }
+
         const token = AuthService.getToken();
 
-        const url = `${DATABASE_URL}/bucketItems/${id}.json?auth=${token}`;
+        const url = `${DATABASE_URL}/bucketItems/${user.userId}/${id}.json?auth=${token}`;
 
         const response = await fetch(url, {
             method: 'DELETE',

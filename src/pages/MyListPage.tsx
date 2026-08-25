@@ -82,8 +82,8 @@ const MyListPage: React.FC = () => {
                 category: formData.category,
                 completed: false,
                 isPublic: false,
-                ownerId: 'temp-user',
-                createdBy: 'temp-user',
+                ownerId: '',
+                createdBy: '',
             });
 
             setItems((prevItems) => [...prevItems, newItem]);

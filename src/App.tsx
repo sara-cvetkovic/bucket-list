@@ -28,6 +28,7 @@ import AddItemPage from './pages/AddItemPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AuthService from './services/AuthService';
+import PrivateRoute from './components/PrivateRoute';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -117,21 +118,21 @@ const App: React.FC = () => (
           <Route exact path="/register">
             <RegisterPage />
           </Route>
-          <Route exact path="/my-list/item/:id">
+          <PrivateRoute exact path="/my-list/item/:id">
             <BucketItemDetailsPage />
-          </Route>
-          <Route exact path="/my-list/add">
+          </PrivateRoute>
+          <PrivateRoute exact path="/my-list/add">
             <AddItemPage />
-          </Route>
-          <Route exact path="/my-list">
+          </PrivateRoute>
+          <PrivateRoute exact path="/my-list">
             <MyListPage />
-          </Route>
-          <Route exact path="/inspire-me">
+          </PrivateRoute>
+          <PrivateRoute exact path="/inspire-me">
             <InspireMePage />
-          </Route>
-          <Route path="/explore">
+          </PrivateRoute>
+          <PrivateRoute path="/explore">
             <ExplorePage />
-          </Route>
+          </PrivateRoute>
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
