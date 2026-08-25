@@ -5,9 +5,9 @@ import {
     IonTitle,
     IonToolbar,
     IonAlert,
-    IonButton,
-    IonMenuButton,
-    IonSpinner, IonItem, IonLabel, IonToggle,
+    IonButton, IonBackButton,
+    IonButtons,
+    IonSpinner, IonItem, IonLabel, IonToggle, IonBadge,
 } from '@ionic/react';
 import { useHistory,useLocation, useParams } from 'react-router-dom';
 import { BucketItem } from '../models/BucketItem';
@@ -71,25 +71,15 @@ const BucketItemDetailsPage: React.FC = () => {
     };
 
     const handleUpdate = async (updatedItem: BucketItem) => {
+        const previous = item;
+        setItem(updatedItem);
+
         try {
             const updated = await BucketListService.updateItem(updatedItem);
             setItem(updated);
         } catch (error) {
             console.error('Error updating item:', error);
-        }
-    };
-
-    const handleSave = async () => {
-        if (!item) {
-            return;
-        }
-
-        try {
-            await BucketListService.updateItem(item);
-
-            alert('Item updated successfully!');
-        } catch (error) {
-            console.error('Error updating item:', error);
+            setItem(previous);
         }
     };
 
@@ -119,7 +109,9 @@ const BucketItemDetailsPage: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonMenuButton slot="start" />
+                    <IonButtons slot="start">
+                        <IonBackButton defaultHref={isExplore ? '/explore' : '/my-list'} text="" />
+                    </IonButtons>
                         <IonTitle>Bucket Item</IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -138,7 +130,9 @@ const BucketItemDetailsPage: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonMenuButton slot="start" />
+                    <IonButtons slot="start">
+                        <IonBackButton defaultHref={isExplore ? '/explore' : '/my-list'} text="" />
+                    </IonButtons>
                     <IonTitle>{item.title}</IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -155,37 +149,18 @@ const BucketItemDetailsPage: React.FC = () => {
                 {!isExplore && (
                     <IonItem>
                     <IonLabel>Completed</IonLabel>
-                <IonToggle
-                    checked={item.completed}
-                    onIonChange={(e) => {
-                        setItem({
-                            ...item,
-                            completed: e.detail.checked
-                        });
-                    }}
-                />
+                        <IonBadge slot="end" color={item.completed ? 'success' : 'medium'}>
+                            {item.completed ? 'Yes' : 'No'}
+                        </IonBadge>
                     </IonItem>
                 )}
                 {!isExplore && (
                 <IonItem>
                     <IonLabel>Public item</IonLabel>
-
-                    <IonToggle
-                        checked={item.isPublic}
-                        onIonChange={(e) => {
-                            setItem({
-                                ...item,
-                                isPublic: e.detail.checked
-                            });
-                        }}
-                    />
+                    <IonBadge slot="end" color={item.isPublic ? 'primary' : 'medium'}>
+                        {item.isPublic ? 'Yes' : 'No'}
+                    </IonBadge>
                 </IonItem>
-                )}
-
-                {!isExplore && (
-                <IonButton expand="block" onClick={handleSave}>
-                    Save Changes
-                </IonButton>
                 )}
 
                 {!isExplore && (

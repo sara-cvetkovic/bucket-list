@@ -7,7 +7,9 @@ import {
     IonCheckbox,
     IonItem,
     IonLabel,
-    IonButton
+    IonButton,
+    IonMenuButton,
+    IonButtons,
 } from '@ionic/react';
 import { useState } from 'react';
 import InspireService from '../services/InspireService';
@@ -86,6 +88,9 @@ const InspirePage: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
+                    <IonButtons slot="start">
+                        <IonMenuButton />
+                    </IonButtons>
                     <IonTitle>Inspire Me</IonTitle>
                 </IonToolbar>
             </IonHeader>

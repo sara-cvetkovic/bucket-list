@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -13,7 +13,6 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonMenuButton,
   IonList,
   IonItem,
   IonMenuToggle,
@@ -62,9 +61,13 @@ import './theme/variables.css';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
+const AppContent: React.FC = () => {
+    const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  return (
+    <>
+      {!isAuthPage && (
         <IonMenu contentId="main-content">
           <IonHeader>
             <IonToolbar>
@@ -108,6 +111,7 @@ const App: React.FC = () => (
             </IonList>
           </IonContent>
         </IonMenu>
+          )}
 
       <IonTabs>
         <IonRouterOutlet id="main-content">
@@ -142,7 +146,7 @@ const App: React.FC = () => (
           </Route>
         </IonRouterOutlet>
 
-        <IonTabBar slot="bottom">
+        <IonTabBar slot="bottom" style={{ display: isAuthPage ? 'none' : '' }}>
           <IonTabButton tab="my-list" href="/my-list">
             <IonIcon aria-hidden="true" icon={triangle} />
             <IonLabel>My List</IonLabel>
@@ -157,8 +161,16 @@ const App: React.FC = () => (
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+      </>
+  );
+};
+
+const App: React.FC = () => (
+    <IonApp>
+      <IonReactRouter>
+        <AppContent />
+      </IonReactRouter>
+    </IonApp>
 );
 
 export default App;

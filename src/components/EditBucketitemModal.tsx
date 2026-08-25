@@ -6,9 +6,9 @@ import {
     IonInput,
     IonItem,
     IonLabel,
-    IonModal,
+    IonModal, IonSelect, IonSelectOption,
     IonTextarea,
-    IonTitle,
+    IonTitle, IonToggle,
     IonToolbar,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
@@ -30,12 +30,16 @@ const EditBucketItemModal: React.FC<EditBucketItemModalProps> = ({
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
+    const [completed, setCompleted] = useState(false);
+    const [isPublic, setIsPublic] = useState(false);
 
     useEffect(() => {
         if (item) {
             setTitle(item.title);
             setDescription(item.description);
             setCategory(item.category);
+            setCompleted(item.completed);
+            setIsPublic(item.isPublic);
         }
     }, [item]);
 
@@ -49,6 +53,8 @@ const EditBucketItemModal: React.FC<EditBucketItemModalProps> = ({
             title: title.trim(),
             description: description.trim(),
             category,
+            completed,
+            isPublic,
         });
 
         onClose();
@@ -91,12 +97,19 @@ const EditBucketItemModal: React.FC<EditBucketItemModalProps> = ({
 
                 <IonItem>
                     <IonLabel position="stacked">Category</IonLabel>
-                    <IonInput
-                        value={category}
-                        onIonInput={(e) =>
-                            setCategory(e.detail.value ?? '')
-                        }
-                    />
+                    <IonSelect value={category} onIonChange={(e) => setCategory(e.detail.value)} placeholder="Select category">
+                        {['Travel', 'Adventure', 'Skills', 'Personal'].map((cat) => (
+                            <IonSelectOption key={cat} value={cat}>{cat}</IonSelectOption>
+                        ))}
+                    </IonSelect>
+                </IonItem>
+                <IonItem>
+                    <IonLabel>Completed</IonLabel>
+                    <IonToggle checked={completed} onIonChange={(e) => setCompleted(e.detail.checked)} />
+                </IonItem>
+                <IonItem>
+                    <IonLabel>Public</IonLabel>
+                    <IonToggle checked={isPublic} onIonChange={(e) => setIsPublic(e.detail.checked)} />
                 </IonItem>
 
                 <IonButton

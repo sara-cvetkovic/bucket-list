@@ -4,6 +4,8 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
+    IonMenuButton,
+    IonButtons,
 } from '@ionic/react';
 import {useEffect, useState} from "react";
 import {BucketItem as BucketItemModel} from "../models/BucketItem";
@@ -35,6 +37,9 @@ const ExplorePage: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
+                    <IonButtons slot="start">
+                        <IonMenuButton />
+                    </IonButtons>
                     <IonTitle>Explore</IonTitle>
                 </IonToolbar>
             </IonHeader>
@@ -54,6 +59,7 @@ const ExplorePage: React.FC = () => {
                                 key={item.id}
                                 item={item}
                                 source="explore"
+                                showStatus={false}
                             />
                         ))}
                     </div>
