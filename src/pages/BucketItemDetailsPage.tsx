@@ -83,6 +83,24 @@ const BucketItemDetailsPage: React.FC = () => {
         }
     };
 
+    const handleSaveToMyList = async () => {
+        if (!item) return;
+        try {
+            await BucketListService.addItem({
+                title: item.title,
+                description: item.description,
+                category: item.category,
+                completed: false,
+                isPublic: false,
+                ownerId: '',
+                createdBy: '',
+            });
+            alert('Saved to your bucket list!');
+        } catch (error) {
+            console.error('Error saving item:', error);
+        }
+    };
+
     if (isLoading) {
         return (
             <IonPage>
@@ -92,17 +110,6 @@ const BucketItemDetailsPage: React.FC = () => {
             </IonPage>
         );
     }
-
-    // const testItem: BucketItemModel = {
-    //     id: '1',
-    //     title: 'Visit Japan',
-    //     description: 'Visit Tokyo and Kyoto',
-    //     category: 'Travel',
-    //     completed: false,
-    //     isPublic: true,
-    //     ownerId: 'test-user',
-    //     createdBy: 'test-user',
-    // };
 
     if (!item) {
     return (
@@ -161,6 +168,12 @@ const BucketItemDetailsPage: React.FC = () => {
                         {item.isPublic ? 'Yes' : 'No'}
                     </IonBadge>
                 </IonItem>
+                )}
+
+                {isExplore && (
+                    <IonButton expand="block" onClick={handleSaveToMyList}>
+                        Save to My List
+                    </IonButton>
                 )}
 
                 {!isExplore && (

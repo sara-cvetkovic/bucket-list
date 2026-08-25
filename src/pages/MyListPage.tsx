@@ -109,9 +109,16 @@ const MyListPage: React.FC = () => {
         <IonContent className="my-list-content ion-padding">
             <h1>My Bucket List</h1>
             <IonButton
-                className="add-button"
-                expand="block"
                 onClick={() => setIsModalOpen(true)}
+                style={{
+                    margin: '16px auto',
+                    display: 'block',
+                    width: 'fit-content',
+                    minWidth: '160px',
+                    '--border-radius': '20px',
+                    '--padding-start': '32px',
+                    '--padding-end': '32px',
+                }}
             >
                 + Add Item
             </IonButton>
