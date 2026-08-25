@@ -97,7 +97,7 @@ const InspirePage: React.FC = () => {
                     expand="block"
                     onClick={getRandomIdeas}
                 >
-                    ✨ Inspire Me
+                    Inspire Me
                 </IonButton>
 
                 {ideas.map((idea) => (

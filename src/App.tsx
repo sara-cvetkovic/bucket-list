@@ -124,13 +124,17 @@ const App: React.FC = () => (
           <PrivateRoute exact path="/my-list/add">
             <AddItemPage />
           </PrivateRoute>
+          <PrivateRoute exact path="/explore/item/:id">
+            <BucketItemDetailsPage />
+          </PrivateRoute>
           <PrivateRoute exact path="/my-list">
             <MyListPage />
           </PrivateRoute>
           <PrivateRoute exact path="/inspire-me">
             <InspireMePage />
           </PrivateRoute>
-          <PrivateRoute path="/explore">
+
+          <PrivateRoute exact path="/explore">
             <ExplorePage />
           </PrivateRoute>
           <Route exact path="/">

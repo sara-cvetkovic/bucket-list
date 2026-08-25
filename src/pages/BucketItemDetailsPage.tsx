@@ -7,9 +7,9 @@ import {
     IonAlert,
     IonButton,
     IonMenuButton,
-    IonSpinner,
+    IonSpinner, IonItem, IonLabel, IonToggle,
 } from '@ionic/react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory,useLocation, useParams } from 'react-router-dom';
 import { BucketItem } from '../models/BucketItem';
 import BucketListService from '../services/BucketListService';
 import { useEffect, useState } from 'react';
@@ -24,6 +24,10 @@ const BucketItemDetailsPage: React.FC = () => {
     const { id } = useParams<RouteParams>();
     const history = useHistory();
 
+    const location = useLocation();
+
+    const isExplore = location.pathname.startsWith('/explore');
+
     const [item, setItem] = useState<BucketItem | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -32,8 +36,17 @@ const BucketItemDetailsPage: React.FC = () => {
     useEffect(() => {
         const loadItem = async () => {
             try {
-                const data = await BucketListService.getItem(id);
-                setItem(data);
+                let data;
+
+                if (isExplore) {
+                    data = await BucketListService.getPublicItem(id);
+                } else {
+                    data = await BucketListService.getItem(id);
+                }
+
+                if (data) {
+                    setItem(data);
+                }
             } catch (error) {
                 console.error('Error loading item:', error);
             } finally {
@@ -61,6 +74,20 @@ const BucketItemDetailsPage: React.FC = () => {
         try {
             const updated = await BucketListService.updateItem(updatedItem);
             setItem(updated);
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+
+    const handleSave = async () => {
+        if (!item) {
+            return;
+        }
+
+        try {
+            await BucketListService.updateItem(item);
+
+            alert('Item updated successfully!');
         } catch (error) {
             console.error('Error updating item:', error);
         }
@@ -130,19 +157,45 @@ const BucketItemDetailsPage: React.FC = () => {
                     {item.completed ? 'Completed' : 'Not completed'}
                 </p>
 
+                {!isExplore && (
+                <IonItem>
+                    <IonLabel>Public item</IonLabel>
+
+                    <IonToggle
+                        checked={item.isPublic}
+                        onIonChange={(e) => {
+                            setItem({
+                                ...item,
+                                isPublic: e.detail.checked
+                            });
+                        }}
+                    />
+                </IonItem>
+                )}
+
+                {!isExplore && (
+                <IonButton expand="block" onClick={handleSave}>
+                    Save Changes
+                </IonButton>
+                )}
+
+                {!isExplore && (
                 <IonButton
                     expand="block"
                     onClick={() => setIsEditModalOpen(true)}
                 >
                     Edit
                 </IonButton>
+                )}
 
+                {!isExplore && (
                 <IonButton
                     expand="block"
                     onClick={() => setShowDeleteAlert(true)}
                 >
                     Delete
                 </IonButton>
+                )}
             <IonAlert
                 isOpen={showDeleteAlert}
                 header="Delete item?"

@@ -132,6 +132,15 @@ class BucketListService {
             body: JSON.stringify(itemData),
         });
 
+
+        if (item.isPublic) {
+            await this.addPublicItem({
+                ...item,
+            });
+        } else {
+            await this.removePublicItem(item.id);
+        }
+
         if (!response.ok) {
             throw new Error(`Failed to update bucket item: ${response.status}`);
         }
@@ -160,6 +169,108 @@ class BucketListService {
         if (!response.ok) {
             throw new Error(`Failed to delete bucket item: ${response.status}`);
         }
+    }
+
+    async getPublicItems(): Promise<BucketItem[]> {
+        const token = AuthService.getToken();
+
+        const url =
+            `${DATABASE_URL}/publicItems.json?auth=${token}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to fetch public items: ${response.status}`
+            );
+        }
+
+        const data = await response.json();
+
+        if (!data) {
+            return [];
+        }
+
+        return Object.entries(data).map(
+            ([id, item]) => ({
+                id,
+                ...(item as Omit<BucketItem, 'id'>),
+            })
+        );
+    }
+
+    async addPublicItem(item: BucketItem): Promise<void> {
+        const token = AuthService.getToken();
+
+        const url =
+            `${DATABASE_URL}/publicItems/${item.id}.json?auth=${token}`;
+
+        const publicItem = {
+            title: item.title,
+            description: item.description,
+            category: item.category,
+            completed: item.completed,
+            isPublic: true,
+            ownerId: item.ownerId,
+            createdBy: item.createdBy,
+        };
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(publicItem),
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to add public item: ${response.status}`
+            );
+        }
+    }
+
+    async removePublicItem(id: string): Promise<void> {
+        const token = AuthService.getToken();
+
+        const url =
+            `${DATABASE_URL}/publicItems/${id}.json?auth=${token}`;
+
+        const response = await fetch(url, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to remove public item: ${response.status}`
+            );
+        }
+    }
+
+    async getPublicItem(id: string): Promise<BucketItem | null> {
+        const token = AuthService.getToken();
+
+        const url =
+            `${DATABASE_URL}/publicItems/${id}.json?auth=${token}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(
+                `Failed to fetch public item: ${response.status}`
+            );
+        }
+
+        const data = await response.json();
+
+        if (!data) {
+            return null;
+        }
+
+        return {
+            id,
+            ...data,
+        };
     }
 }
 

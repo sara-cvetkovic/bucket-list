@@ -5,13 +5,19 @@ import './BucketItem.css';
 
 interface BucketItemProps {
     item: BucketItemModel;
+    source?: 'my-list' | 'explore';
 }
 
-const BucketItem: React.FC<BucketItemProps> = ({ item }) => {
+const BucketItem: React.FC<BucketItemProps> = ({ item, source = 'my-list', }) => {
     const history = useHistory();
 
     const openDetails = () => {
-        history.push(`/my-list/item/${item.id}`);
+
+        if (source === 'explore') {
+            history.push(`/explore/item/${item.id}`);
+        } else {
+            history.push(`/my-list/item/${item.id}`);
+        }
     };
 
     return (
