@@ -6,7 +6,7 @@ export default function PrivateRoute({ children, ...rest }: RouteProps) {
         <Route
             {...rest}
             render={() =>
-                AuthService.isLoggedIn() ? children : <Redirect to="/login" />
+                AuthService.isLoggedIn() ? (children as React.ReactElement)  : <Redirect to='/login'/>
             }
         />
     );

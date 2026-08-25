@@ -23,7 +23,6 @@ import MyListPage from './pages/MyListPage';
 import InspireMePage from './pages/InspireMePage';
 import ExplorePage from './pages/ExplorePage';
 import BucketItemDetailsPage from './pages/BucketItemDetailsPage';
-import AddItemPage from './pages/AddItemPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AuthService from './services/AuthService';
@@ -124,9 +123,6 @@ const AppContent: React.FC = () => {
           </Route>
           <PrivateRoute exact path="/my-list/item/:id">
             <BucketItemDetailsPage />
-          </PrivateRoute>
-          <PrivateRoute exact path="/my-list/add">
-            <AddItemPage />
           </PrivateRoute>
           <PrivateRoute exact path="/explore/item/:id">
             <BucketItemDetailsPage />

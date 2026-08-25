@@ -23,8 +23,6 @@ class BucketListService {
 
         const data = await response.json();
 
-        console.log('Firebase response:', data);
-
         if (!data) {
             return [];
         }
@@ -72,10 +70,6 @@ class BucketListService {
         }
 
         const token = AuthService.getToken()
-
-        console.log('Current user:', user);
-        console.log('Token:', token);
-        console.log('Token exists:', !!token);
 
         const url = `${DATABASE_URL}/bucketItems/${user.userId}.json?auth=${token}`;
 
